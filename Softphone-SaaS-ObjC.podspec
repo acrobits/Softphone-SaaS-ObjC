@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
     s.platform     = :ios, '13.0'
     s.preserve_paths = 'Frameworks/*'
     s.vendored_frameworks = "Frameworks/Softphone.xcframework"
-    s.script_phase = { :name => 'Setup Softphone Framework', :script => 'cp -r ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks/${CONFIGURATION}/Softphone.xcframework ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks/Softphone.xcframework', :execution_position => :before_compile }
+    s.script_phase = { :name => 'Setup Softphone Framework', :script => 'cp -r ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks/${CONFIGURATION}/Softphone.xcframework ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks', :execution_position => :before_compile }
     s.requires_arc = true
  end
