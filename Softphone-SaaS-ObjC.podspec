@@ -12,4 +12,5 @@ Pod::Spec.new do |s|
     s.vendored_frameworks = "Frameworks/Softphone.xcframework"
     s.script_phase = { :name => 'Setup Softphone Framework', :script => 'cp -r ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks/${CONFIGURATION}/Softphone.xcframework ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks', :execution_position => :before_compile }
     s.requires_arc = true
+    s.xcconfig = { 'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17', 'CLANG_CXX_LIBRARY' => 'libc++' }
  end
