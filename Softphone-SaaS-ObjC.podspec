@@ -7,6 +7,7 @@ Pod::Spec.new do |s|
     s.license      = 'APACHE 2.0'
     s.source       = { :git => "https://github.com/acrobits/Softphone-SaaS-ObjC.git", :tag => s.version }
     s.platform     = :ios, '13.0'
+    s.ios.framework  = 'UIKit'
     s.preserve_paths = 'Frameworks/*'
     s.vendored_frameworks = "Frameworks/Softphone.xcframework"
     s.script_phase = { :name => 'Setup Softphone Framework', :script => 'cp -r ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks/${CONFIGURATION}/Softphone.xcframework ${PODS_ROOT}/Softphone-SaaS-ObjC/Frameworks', :execution_position => :before_compile }
