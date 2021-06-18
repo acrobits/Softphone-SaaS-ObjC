@@ -1,0 +1,4 @@
+<defaults>
+    <prop name="title" default="GSM"/>
+    <prop name="dtmfOrder" default="info"/>
+</defaults>

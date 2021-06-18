@@ -1,0 +1,18 @@
+framework module Softphone
+{
+  umbrella header "Softphone.h"
+
+  export *
+  module *
+  {
+    export *
+  }
+
+  module Ali
+  {
+    header "ali_string.h" 
+    export *
+  }
+
+}
+

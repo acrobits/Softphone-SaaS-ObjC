@@ -1,0 +1,267 @@
+<defaults>
+
+    <prop name="title" default="">
+        <validator type="required">
+            <message>A value must be entered.</message>
+            <!--<message lang="en">Example message tag for english locale.</message>-->
+        </validator>
+    </prop>
+
+    <prop name="username" default=""> 
+        <validator type="required">
+            <message>A value must be entered.</message>
+	</validator>
+    </prop>
+    
+    <prop name="host" default="">
+        <validator type="required">
+            <message>A value must be entered.</message>
+	    </validator>
+            <validator type="host">
+		    <message>Please enter the value as host[:port].</message>
+	    </validator>
+    </prop>
+
+    <prop name="icm" default="auto"/>
+    <prop name="requiresRegistrationForOutgoingCalls" default="1"/>
+    
+    <prop name="proxy" default="">
+        <validator type="host">
+		<message>Please enter the value as host[:port].</message>
+	</validator>
+    </prop>
+
+    <prop name="rtpPortRangeStart" default="10000">
+        <validator type="port"/>
+        <validator type="rtpRange"/>
+    </prop>
+
+    <prop name="rtpPortRangeEnd" default="65535">
+        <validator type="port"/>
+    </prop>
+
+    <prop name="listeningPort" default="">
+        <validator type="bindport"/>
+    </prop>
+
+    <prop name="keepAlive" default="1"/>
+
+    <prop name="expires" default="600">
+        <validator type="numeric" min="30">
+		<message>Please, enter number equal or higher than 30.</message>
+		<message1>Value is too low. Please, enter number equal or higher than 30.</message1>
+	</validator>
+    </prop>
+
+    <prop name="keepAlivePeriod" default="30">
+        <validator type="numeric" min="5">
+            <message>Please, enter number equal or higher than 5.</message>
+            <message1>Value is too low. Please, enter number equal or higher than 5.</message1>
+	    </validator>
+    </prop>
+
+    <prop name="outboundProxy_port" default="">
+        <validator type="port" allowEmpty="1"/>
+    </prop>
+
+    <prop name="bgrOutboundProxy_port" default="">
+        <validator type="port" allowEmpty="1"/>
+    </prop>
+
+    <prop name="honorTheirCodecListWiFi" default="1"/>
+    <prop name="honorTheirCodecList3G" default="0"/>
+    <prop name="contactIP" default="internal"/>
+    <prop name="transport" default="udp">
+        <validator type="oneOf" ignoreCase="1" list="udp,tcp,tls,tls+sip:"/>
+    </prop>
+    <prop name="bgrTransport">
+        <validator type="oneOf" allowEmpty="1" list="udp,tcp,tls,tls+sip:"/>
+    </prop>
+    <prop name="outboundProxy_transport">
+        <validator type="oneOf" allowEmpty="1" list="udp,tcp,tls,tls+sip:"/>
+    </prop>
+    <prop name="incomingDisabled" default="0"/>
+    <prop name="codecOrder" default="0,8,9,103,102,18,3"/>
+    <prop name="codecOrder3G" default="18,103,102,3,0,8,9"/>
+    <prop name="allowVideo" default="1"/>
+    <prop name="videoCodecOrder" default="108,34,99"/>
+    <prop name="videoCodecOrder3G" default="108,34,99"/>
+    <prop name="pushNAT" default="1"/>
+    <prop name="pushDebug" default="0"/>
+    <prop name="pushVoicemail" default="0"/>
+    <prop name="dtmfOrder" default="rfc2833,info,audio"/>
+    <prop name="dtmfAll" default="0"/>
+    <prop name="ptime" default="20"/>
+    <prop name="ptime3G" default="30"/>
+    <prop name="sendAuthenticationPreemptively" default="0"/>
+    <prop name="forcePtime" default="0"/>
+    <prop name="forcePtime3G" default="0"/>
+    
+    <prop name="networkUse" default="auto"/>
+    <prop name="overrideGlobalSsidLists" default="0"/>
+    
+    <prop name="remoteContact" default="pai,from,rpid,ppi"/>
+    <prop name="outgoingRemoteContact" default="pai,to,rpid,ppi"/>
+    <prop name="userCallerIdMethod" default="from"/>
+    <prop name="sdesIncoming" default="enabled"/>
+    <prop name="sdesOutgoing" default="disabled"/>
+    <prop name="zrtpIncoming" default="disabled"/>
+    <prop name="zrtpOutgoing" default="disabled"/>
+    <prop name="dtlsIncoming" default="disabled"/>
+    <prop name="dtlsOutgoing" default="disabled"/>
+    <prop name="videoMinKbpsWifi" default="64"/>
+    <prop name="videoMaxKbpsWifi" default="384"/>
+    <prop name="videoMinKbps3G" default="64"/>
+    <prop name="videoMaxKbps3G" default="192"/>
+    <prop name="rememberRegistrationState" default="1"/>
+    <prop name="videoDimsWifi" default="qcif"/>
+    <prop name="videoDims3G" default="qcif"/>
+    <prop name="natTraversal" default="auto"/>
+    <prop name="sendAudioBack" default="1"/>
+    <prop name="xcapUsesSipAuth" default="1"/>
+    <prop name="contactListStorage" default="local"/>
+    <prop name="presenceMethod" default="off"/>
+    <prop name="allowMessage" default="0"/>
+    <prop name="callWaiting" default="1"/>
+    <prop name="msrpUsesSipAuth" default="1"/>
+    <prop name="symmetricNatSubstituteAddress" default="10.20.30.40"/>
+    <prop name="iceDefaultCandidateOrder" default="relay,srflx,host"/>
+
+    <prop name="wcb_method" default=""/>
+    <prop name="cth_ws_method" default=""/>
+
+
+    <prop name="pushTokenReporterUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify Push Token reporter url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="genericSmsFetchUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify SMS fetch url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="genericMediaUploaderUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify media upload url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="genericSmsSendUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify SMS sender url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="genericRateCheckUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify rate check url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="genericBalanceCheckUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify balance checker url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="extProvUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*,lua://*">
+            <message>Please, verify external provisioning url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="vpnStartupUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify the pre-registeration action url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="customActionUrl">
+        <validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify the dial action url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="wcb_url">
+		<validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify the callback url for errors.</message>
+        </validator>
+    </prop>
+    <prop name="cth_ws_url">
+		<validator type="oneOf" ignoreCase="1" allowEmpty="1" list="http://*,https://*">
+            <message>Please, verify the callthrough url for errors.</message>
+        </validator>
+    </prop>
+    
+    <prop name="periodicRingtone" default="sil.wav"/>
+    <prop name="periodicRingtonePeriod" default="4"/>
+    <prop name="autoAnswerTimeoutInSeconds" default="5"/>
+    <prop name="autoAnswerEnabled" default="0"/>
+    <prop name="smartContactsEnabled2" default="0"/>
+    <prop name="allowToHeaderMismatch" default="1"/>
+    <prop name="minNumberLengthToIgnoreRemoteUserDomain" default="6"/>
+    <prop name="messagePreview" default="full"/>
+    <prop name="ignoreRemoteUserDomain" default="1"/>
+    <prop name="freeswitchZrtpCompatibility" default="0"/>
+    <prop name="opusOptions.class" default="wb"/>
+    <prop name="opusOptions.bandwidth" default="wb"/>
+    <prop name="opusOptions.complexity" default=""/>
+    <prop name="opusOptions.bitrate" default="">
+        <validator type="numeric" min="6000" max="510000">
+            <message>Please, enter number between 6000 and 510000.</message>
+            <message1>Value is too low. Please, enter at least 6000.</message1>
+            <message2>Value is too high. Please, enter at most 510000.</message2>
+	</validator>
+    </prop>
+    <prop name="opusOptions.expectedPacketLoss" default="5">
+        <validator type="numeric" min="0" max="100">
+            <message>Enter number between 0 and 100.</message>
+            <message1>Value is too low. Please, enter at least 0.</message1>
+            <message2>Value is too high. Please, enter at most 100.</message2>
+	</validator>
+    </prop>
+    <prop name="opusOptions3G.fec" default="1"/>
+    <prop name="opusOptions3G.dtx" default="1"/>
+
+    <prop name="opusOptions3G.class" default="nb"/>
+    <prop name="opusOptions3G.bandwidth" default="nb"/>
+    <prop name="opusOptions3G.complexity" default=""/>
+    <prop name="opusOptions3G.bitrate" default="">
+        <validator type="numeric" min="6000" max="510000">
+            <message>Please, enter number between 6000 and 510000.</message>
+            <message1>Value is too low. Please, enter at least 6000.</message1>
+            <message2>Value is too high. Please, enter at most 510000.</message2>
+	</validator>
+    </prop>
+    <prop name="opusOptions3G.expectedPacketLoss" default="5">
+        <validator type="numeric" min="0" max="100">
+            <message>Please, enter number between 0 and 100.</message>
+            <message1>Value is too low. Please, enter at least 0.</message1>
+            <message2>Value is too high. Please, enter at most 100.</message2>
+	</validator>
+    </prop>
+    <prop name="opusOptions3G.fec" default="1"/>
+    <prop name="opusOptions3G.dtx" default="1"/>
+    <prop name="opusOptions3G.vbr" default="1"/>
+
+    <prop name="codec2Mode" default="1"/>
+    <prop name="codec2Mode3G" default="1"/>
+
+    <prop name="pushNotificationReporterTimeout" default="30"/>
+    <prop name="pushNotificationReporterUrl" default=""/>
+    <prop name="pushNotificationReporterPostData" default=""/>
+    <prop name="pushNotificationReporterContentType" default=""/>
+    <prop name="pushNotificationReporterCustomHeaders" default=""/>
+    <prop name="pushNotificationReporterMethod" default=""/>
+    
+    <prop name="createCallthroughContact" default="1"/>
+    <prop name="isComposingRefreshInterval" default="0"/>
+    <prop name="maxMessageBodySize" default="8000"/>
+
+    <prop name="saveAndNotifyCallsAnsweredElseWhere" default="1"/>
+    
+    <prop name="pagingAudioRoute" default="Speaker"/>
+
+    <prop name="broadsoft.automaticHoldRetrieve" default="20"/>
+    <prop name="rfc2833Volume" default="10">
+        <validator type="numeric" min="0" max="63">
+            <message>Please, enter number between 0 and 63.</message>
+            <message1>Value is too low. Please, enter at least 0.</message1>
+            <message2>Value is too high. Please, enter at most 63.</message2>
+        </validator>
+    </prop>
+</defaults>
