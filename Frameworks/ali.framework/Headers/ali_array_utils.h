@@ -5250,16 +5250,17 @@ public:
     {}
 
     explicit c_string_const_ref( char const* str ) noexcept
-    :   string_const_ref{str, str != nullptr ? str_len(str) : 0}
-    {
-        ali_assert(str != nullptr);
-    }
+    :   string_const_ref{
+            str != nullptr ? str            : "",
+            str != nullptr ? str_len(str)   : 0}
+    {}
 
     constexpr c_string_const_ref( char const* str, int size ) noexcept
-    :   string_const_ref{str, size}
+    :   string_const_ref{
+            str != nullptr ? str : "", size}
     {
-        ali_constexpr_assert(str != nullptr);
-        ali_constexpr_assert(str[size] == '\0');
+        ali_constexpr_assert(str != nullptr || size == 0);
+        ali_constexpr_assert(str == nullptr || str[size] == '\0');
     }
 
     c_string_const_ref( c_string_const_ref b, int pos ) noexcept
@@ -5471,16 +5472,17 @@ public:
     {}
 
     explicit c_wstring_const_ref( ali::wchar const* str ) noexcept
-    :   wstring_const_ref{str, str != nullptr ? str_len(str) : 0}
-    {
-        ali_assert(str != nullptr);
-    }
+    :   wstring_const_ref{
+            str != nullptr ? str            : L"",
+            str != nullptr ? str_len(str)   : 0}
+    {}
 
     constexpr c_wstring_const_ref( ali::wchar const* str, int size ) noexcept
-    :   wstring_const_ref{str, size}
+    :   wstring_const_ref{
+            str != nullptr ? str : L"", size}
     {
-        ali_constexpr_assert(str != nullptr);
-        ali_constexpr_assert(str[size] == L'\0');
+        ali_constexpr_assert(str != nullptr || size == 0);
+        ali_constexpr_assert(str == nullptr || str[size] == L'\0');
     }
 
     c_wstring_const_ref( c_wstring_const_ref b, int pos ) noexcept

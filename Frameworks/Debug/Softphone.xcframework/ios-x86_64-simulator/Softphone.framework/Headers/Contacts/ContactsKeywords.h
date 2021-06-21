@@ -23,6 +23,7 @@ namespace Contacts
         static const ali::string_literal DISPLAY_NAME;
         static const ali::string_literal DISPLAY_NAME_WITHOUT_DIACRITICS;
         static const ali::string_literal CONTACT_ENTRIES;
+        static const ali::string_literal CONTACT_ADDRESSES;
         static const ali::string_literal BLOCK_ID;
         static const ali::string_literal CHECKSUM;
         static const ali::string_literal VERSION;

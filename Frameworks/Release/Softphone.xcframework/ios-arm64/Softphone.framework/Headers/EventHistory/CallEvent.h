@@ -209,7 +209,7 @@ namespace EventHistory
         ali::string getTransportUriWithAppliedRewriting() const
         //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
         {
-            ali::string const& rewrittenTransportUri = getAttribute(Attributes::rewrittenTransportUri);
+            ali::string const& rewrittenTransportUri = getAttribute(Attributes::dialActionRewrittenTransportUri);
             
             return rewrittenTransportUri.is_empty() ? getRemote().get() : rewrittenTransportUri;
         }
@@ -327,7 +327,7 @@ namespace EventHistory
             static ali::string_literal const incomingCallActionParam;
             static ali::string_literal const diversion;
             static ali::string_literal const locationPolicy;
-            static ali::string_literal const rewrittenTransportUri;
+            static ali::string_literal const dialActionRewrittenTransportUri;
         };
 
         //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -336,6 +336,7 @@ namespace EventHistory
         //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
         {
             static const ali::string_literal callGroupId;
+            static const ali::string_literal rewrittenTransportUri;
         };
     };
 

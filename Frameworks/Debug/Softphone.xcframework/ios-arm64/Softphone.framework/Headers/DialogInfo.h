@@ -18,6 +18,38 @@ namespace Softphone
 {
 
 // ******************************************************************
+struct BusyLampFieldUri
+// ******************************************************************
+{
+    ali::string uri;
+    ali::string accountId;
+    
+    bool operator==(BusyLampFieldUri const&  b) const
+    {
+        return uri == b.uri && accountId == b.accountId;
+    }
+
+    bool operator<(BusyLampFieldUri const&  b) const
+    {
+        if (uri == b.uri)
+            return accountId < b.accountId;
+        return uri < b.uri;
+    }
+
+    friend int compare(BusyLampFieldUri const& a, BusyLampFieldUri const& b)
+    {
+        using ali::compare;
+
+        int result = compare(a.uri, b.uri);
+
+        if (result == 0)
+            result = compare(a.accountId, b.accountId);
+
+        return result;
+    }
+};
+
+// ******************************************************************
 struct BusyLampField
 // ******************************************************************
 {
@@ -27,6 +59,7 @@ public:     //  Enum
         enum Enum
         {
             Unknown,
+            WaitingForFirstStatusUpdate,
             Idle,
             Ringing,
             Established,
@@ -40,6 +73,11 @@ public:     //  Enum
         bool isUnknown( void ) const
         {
             return mValue == Unknown;
+        }
+
+        bool isWaitingForFirstStatusUpdate( void ) const
+        {
+            return mValue == WaitingForFirstStatusUpdate;
         }
 
         bool isIdle( void ) const
@@ -71,6 +109,11 @@ public:     //  Enum
         State& setUnknown( void )
         {
             return set(Unknown);
+        }
+
+        State& setWaitingForFirstStatusUpdate( void )
+        {
+            return set(WaitingForFirstStatusUpdate);
         }
 
         State& setIdle( void )
@@ -263,6 +306,10 @@ public:     //  Enum
         enum Enum
         {
             Error,
+            WaitingForFirstStatusUpdate,
+                //  Only the mAccountId and mEntity fields
+                //  are valid when this update type is set.
+
             Full,
             Partial
         };
@@ -274,6 +321,11 @@ public:     //  Enum
         bool isError( void ) const
         {
             return mValue == Error;
+        }
+
+        bool isWaitingForFirstStatusUpdate( void ) const
+        {
+            return mValue == WaitingForFirstStatusUpdate;
         }
 
         bool isFull( void ) const
@@ -295,6 +347,11 @@ public:     //  Enum
         UpdateType& setError( void )
         {
             return set(Error);
+        }
+
+        UpdateType& setWaitingForFirstStatusUpdate( void )
+        {
+            return set(WaitingForFirstStatusUpdate);
         }
 
         UpdateType& setFull( void )

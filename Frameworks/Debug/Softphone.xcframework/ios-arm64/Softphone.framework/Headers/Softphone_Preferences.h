@@ -9,7 +9,7 @@
 #pragma once
 
 #include "RingerSetting.h"
-
+#include "Softphone/IncomingCallsMode.h"
 
 namespace PreferenceKeys
 {
@@ -18,6 +18,8 @@ namespace PreferenceKeys
     class GenericBasicROKey;
     template <typename Type>
     class GenericBasicKey;
+
+    class BasicKey;
 }
 
 namespace Softphone
@@ -26,6 +28,28 @@ namespace Softphone
     struct Preferences
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     {
+        //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+        class BasicKey
+        //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+        {
+        public:
+            BasicKey(ali::string_const_ref keyId);
+            ~BasicKey() = default;
+            
+            ali::string_const_ref getType() const;
+            ali::string_const_ref get() const;
+            ali::string_const_ref getDefault() const;
+            void set(ali::string_const_ref value);
+
+            bool hasChanged() const;
+            
+            bool boolValue() const;
+            void setBoolValue(bool b);
+            
+        private:
+            PreferenceKeys::BasicKey * mKey;
+        };
+
         //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
         template <typename Type>
         class ROKey
@@ -37,7 +61,7 @@ namespace Softphone
             //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
                 : mKey{key}
             {}
-
+            
             Type get() const;
             Type getDefault( void ) const;
             void overrideDefault(Type const& value);
@@ -263,31 +287,58 @@ namespace Softphone
         Key<bool>                useCallKit;
 
         /**
+         * Whether to use your own callkit implementation..
+         * When setting this key to true, you should set useCallKit to false
+         * Defaults to false.
+         */
+        Key<bool>                callKitExternal;
+
+        /**
+         * Controls the CXHandleType in CXCallUpdate
+         * Defaults to true which sets the handle type to PhoneNumber. If set to false the type is set to Generic which in turn disables matching with device contacts
+         */
+        Key<bool>                callKitContactMatching;
+
+        /**
          * Whether to report call that are unanswered while using CallKit.
          * Defaults to true.
          */
         ROKey<bool>              reportCallKitFailuresAsUnanswered;
         
+//  PK: Conflict during master -> merge_win_mac merge
+#ifdef  ACROBITS_DESKTOP_APP
+#else   //  !ACROBITS_DESKTOP_APP
+
         /**
          * Sets the preferred IO buffer duration in milliseconds for calls.
          * Defaults to 12.
          */
         Key<int>                audioSessionIOBufferDurationInMs;
 
+#endif  //  ACROBITS_DESKTOP_APP
+
 #endif
         /**
          * Missed call count.
          */
         Key<int>                 missedCount;
+
+        /**
+         * Whether to use the legacy stream for the storage of events.
+         * Defaults to true.
+         */
+        ROKey<bool>              useLegacyStream;
     };
 
     extern template class Preferences::ROKey<bool>;
     extern template class Preferences::ROKey<int>;
     extern template class Preferences::ROKey<ali::string>;
     extern template class Preferences::ROKey<RingerSetting>;
+    extern template class Preferences::ROKey<IncomingCallsMode>;
     extern template class Preferences::Key<bool>;
     extern template class Preferences::Key<int>;
     extern template class Preferences::Key<ali::string>;
     extern template class Preferences::Key<RingerSetting>;
+    extern template class Preferences::Key<IncomingCallsMode>;
 }
 

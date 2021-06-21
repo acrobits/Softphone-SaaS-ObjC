@@ -109,7 +109,7 @@ public:
 
     safe_exception_string& operator=( safe_exception_string b );
 
-    string_const_ref get( void ) const;
+    c_string_const_ref get( void ) const;
 
     //void swap( safe_exception_string& b )
     //{

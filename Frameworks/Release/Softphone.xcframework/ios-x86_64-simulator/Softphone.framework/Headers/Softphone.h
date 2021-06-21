@@ -18,22 +18,36 @@
 #include "ali/ali_xml_tree2.h"
 #include "ali/ali_net_interface_forward.h"
 
+//  PK: Conflict during master -> merge_win_mac merge
+#ifdef  ACROBITS_DESKTOP_APP
+
+#include "AudioDevice.h"
+#include "MicrophoneType.h"
+
+#else   //  !ACROBITS_DESKTOP_APP
+
 #include "AudioRoute.h"
+
+#endif  //  ACROBITS_DESKTOP_APP
+
 #include "Balance/BalanceRecord.h"
 #include "Call/CallStatistics.h"
 #include "Call/CallTypes.h"
 #include "Call/DesiredMedia.h"
 #include "Call/CallAudioHook.h"
+#include "Call/CallActionSheetConfig.h"
 
 #include "Softphone/Contacts/ContactBlock.h"
 #include "Softphone/Contacts/ContactEnumeration.h"
 #include "Softphone/Contacts/ContactSection.h"
 #include "Softphone/Contacts/ContactSourceState.h"
 
-#include "DialAction/DialActionType.h"
+#include "Softphone/DialAction/DialActionType.h"
 
 #include "Softphone/Index/IndexQuery.h"
 #include "Softphone/Index/IndexDocument.h"
+#include "Softphone/Index/ContactIndexFields.h"
+
 #include "Invite/InviteResult.h"
 
 #include "Softphone/Account/AccountXml.h"
@@ -186,6 +200,8 @@ namespace Softphone
         return instanceRelease();
 #endif
     }
+
+    bool instanceExists();
 
 #if defined(SOFTPHONE_ADDONS)
     /** @brief Addon */
@@ -340,6 +356,40 @@ namespace Softphone
         struct Notifications
         //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
         {
+            /** @brief Transient for the incoming call notification ID.
+             * @type{string}
+             *
+             * you can use this convenience transient to be able to cancel the incoming call notification
+             * from call state changed callback. It's here so you don't have to come up with your own
+             * identification. It's based on the push call ID or the event ID in case of non-pushed calls
+             */
+            static ali::string_literal const incomingCallNotificationId;
+
+            /** @brief Transient for the missed call notification ID.
+             * @type{string}
+             *
+             * you can use this convenience transient to be able to cancel the previous missed call notification
+             * when firing a new one with different missed call count for the same callee.
+             * It's based on the callee URI
+             */
+            static ali::string_literal const missedCallNotificationId;
+
+            /** @brief Transient for the missed call count per the callee
+             * @type{string}
+             *
+             * you can use this convenience transient to be able to always display a single missed calls notification
+             * per callee with the total number of missed calls for the particular person.
+             * To be used with missedCallNotificationId transient to be able to cancel the previous notification
+             */
+            static ali::string_literal const missedCallCountForCallee;
+
+            /** @brief Transient for whether the user should be notified about the incoming call
+             * @type{string}
+             *
+             * this transient is false if the call is automatically rejected or
+             * when the user is notified by the system (e.g. CallKit native incoming call screen)
+             */
+
             static ali::string_literal const notifyUser;
         };
 
@@ -514,6 +564,46 @@ namespace Softphone
 #endif
     };
 
+    /** @brief Interface of an AppInterface for the UI Related Events in the Acrobits libsoftphone library */
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+    class AppInterface
+    //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+    {
+    public:
+        virtual ~AppInterface()
+        {}
+        
+        virtual void showMaxCallAlert(int /*maxCalls*/) = 0;
+        
+        virtual void showNoNetworkAlert() = 0;
+        
+        virtual void showMicrophoneAlert() = 0;
+        
+        virtual void showRegistrationAlert() = 0;
+        
+        virtual void presentDialActionSheet(CallActionSheetConfig const& /*config*/) = 0;
+        
+        virtual bool dialGsm(ali::string_const_ref /*dialString*/, Softphone::EventHistory::CallEvent::Pointer /*callEvent*/) = 0;
+        
+        virtual bool canPlaceGsmCalls() = 0;
+        
+        virtual void showCallWithId(Softphone::EventHistory::CallEvent::Pointer const& /*callEvent*/) = 0;
+        
+        virtual void composeMessageTo(Softphone::EventHistory::CallEvent::Pointer /*event*/) = 0;
+        
+        virtual bool composeMessage(Softphone::EventHistory::MessageEvent::Pointer /*event*/) = 0;
+        
+        virtual void messageSendingComplete(Softphone::EventHistory::MessageEvent::Pointer const message, bool /*result*/, ali::string const& /*messageFromTransport*/) = 0;
+        
+        virtual bool copyNumber(ali::string const& /*number*/) = 0;
+        
+        virtual bool openUrl(const ali::string &/*url*/) = 0;
+
+        virtual bool isInTogetherConference() const = 0;
+        
+        virtual Softphone::EventHistory::CallEvent::Pointer getControlledCall() = 0;
+    };
+
     /** @brief Interface of an observer of events in the Acrobits libsoftphone library */
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     class Observer
@@ -527,6 +617,17 @@ namespace Softphone
         /** @brief Network change detected
           * @param network Current (new) network type */
         virtual void onNetworkChangeDetected(Network::Type network) = 0;
+
+        /** @brief Invoked when a remote host supplies invalid TLS certificate.
+          * @param host The domain name of the remote host
+          * @param certificateHash The hash value of the certificate chain
+          * 
+          * You can use the Softphone::instance()->network()->certificates()
+          * interface to manage exceptions to TLS certificate verification. */
+        virtual void onNetworkCertificateVerificationFailed(
+            ali::string const& /*host*/,
+            ali::string const& /*certificateHash*/ )
+        {}
 
         /** @brief SIP message has been sent or received
           * @param message The SIP message */
@@ -594,6 +695,29 @@ namespace Softphone
         virtual void onCallHoldStateChanged(EventHistory::CallEvent::Pointer call,
                                             Call::HoldStates const& states) = 0;
 
+//  PK: Conflict during master -> merge_win_mac merge
+#ifdef  ACROBITS_DESKTOP_APP
+
+        /** @brief Audio devices have changed
+          * @param devices the current snapshot of audio devices available
+          *
+          * This method is called each time the audio input or output devices change.
+          * However, when that occurs is platform-dependent. */
+        virtual void onAudioDevicesChanged(Softphone::AudioDeviceSnapshot const& /*devices*/)
+        {}
+
+        /** @brief Default audio device has changed
+         * @param device the currently set device
+         * @param deviceType specifies whether default input or output has changed
+         *
+         * This method is called each time the default audio input or output devices change.
+         * However, when that occurs is platform-dependent. */
+        virtual void onCurrentAudioDeviceChanged(Softphone::AudioDevice const& /*device*/,
+                                                 Softphone::AudioDeviceType /*deviceType*/)
+        {}
+
+#else   //  !ACROBITS_DESKTOP_APP
+
         /** @brief Audio route changed
           * @param route The new audio route
           *
@@ -609,6 +733,8 @@ namespace Softphone
          *  However, when that occurs is platform-dependent. */
         virtual void onAudioAvailableRoutesChanged(ali::array_set<Softphone::AudioRoute::Type> /*routes*/)
         {}
+
+#endif  //  ACROBITS_DESKTOP_APP
 
         /**
          * @brief Video flow changed
@@ -871,7 +997,9 @@ namespace Softphone
         virtual void onDialogEvent()
         {}
 #endif
-};
+        virtual void onSettingsChanged()
+        {}
+    };
 
     /** @brief Instance of the Acrobits libsoftphone library */
     //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -891,6 +1019,15 @@ namespace Softphone
         /** @brief Set an observer, replacing a previous one
           * @param observer The new observer */
         virtual void setObserver(Observer * observer) = 0;
+
+        /** @brief Get current application interface
+          * @return The current application interface
+          * @retval nullptr No application interface */
+        virtual AppInterface * getAppInterface() const = 0;
+
+        /** @brief Set an application interface, replacing a previous one
+          * @param appInterface The new application interface */
+        virtual void setAppInterface(AppInterface * appInterface) = 0;
 
         struct Audio;
         struct Calls;
@@ -1118,6 +1255,17 @@ namespace Softphone
         virtual void dtmfOn(char codeInAscii,
                             bool appendDigit = true) = 0;
 
+        /** @brief Start generating DTMF tone for a digit locally
+          * @param codeInAscii DTMF code in ASCII
+          *
+          * Starts generating a DTMF tone locally. The tone is generated until
+          * @ref dtmfOff is called.
+          *
+          * This method generates only a local beep.
+          *
+          * To stop the DTMF sound, use @ref dtmfOff.  */
+        virtual void dtmfLocal(char codeInAscii) = 0;
+
         /** @brief Stop generating DTMF tone for a digit
           *
           * Stops generating the DTMF tone started with @ref dtmfOn. */
@@ -1147,6 +1295,36 @@ namespace Softphone
             setMuted(Microphone::Physical,muted);
         }
 
+//  PK: Conflict during master -> merge_win_mac merge
+#ifdef  ACROBITS_DESKTOP_APP
+
+        /** @brief Set the audio device
+         * @param device The audio device identifier to set
+         * @param type Specify input or output device
+          *
+          * The observer is @ref Observer::onAudioDeviceChanged "notified about changes in the audio devices".
+          *
+          * @see @ref setObserver for setting the observer. */
+        virtual void setAudioDevice(ali::string const& device, Softphone::AudioDeviceType type) = 0;
+
+        /** @brief Get the input audio device
+         * @param type Specify input or output device
+          * @return The input audio record */
+        virtual AudioDevice const& getAudioDevice(Softphone::AudioDeviceType type) const = 0;
+
+        /** @brief Get available call audio devices
+          * @return Set of available call audio routes
+          *
+          * This method returns only the readily-available audio devices,
+          * e.g. Bluetooth devices will only  be present
+          * when a Bluetooth hands-free is connected.
+          *
+          * This list is usually offered to the user in the audio input/output device
+          * selection dialog. */
+        virtual Softphone::AudioDeviceSnapshot getAvailableAudioDevices() const = 0;
+
+#else   //  !ACROBITS_DESKTOP_APP
+
         /** @brief Set the call audio route
           * @param route The call audio route
           *
@@ -1174,17 +1352,25 @@ namespace Softphone
           * selection dialog. */
         virtual ali::array_set<AudioRoute::Type> getAvailableCallAudioRoutes() const = 0;
 
+#endif  //  ACROBITS_DESKTOP_APP
+
         /** @brief Check if the device is muted
           * @retval true The device is muted
           * @retval false The device is not muted
           *
-          * Checks if the device as a whole is muted (or on vibrations). When
+          * Checks if the device/machine as a whole is muted (or on vibrations). When
           * the device is muted, an incoming call should not ring. */
         virtual bool isDeviceMuted() const = 0;
         
+//  PK: Conflict during master -> merge_win_mac merge
+#ifdef  ACROBITS_DESKTOP_APP
+#else   //  !ACROBITS_DESKTOP_APP
+
 #if defined(__APPLE__)
         virtual void setExternalAudioPlaybackActive(bool active) = 0;
 #endif
+
+#endif  //  ACROBITS_DESKTOP_APP
     };
 
     /** @brief Methods for manipulating calls */

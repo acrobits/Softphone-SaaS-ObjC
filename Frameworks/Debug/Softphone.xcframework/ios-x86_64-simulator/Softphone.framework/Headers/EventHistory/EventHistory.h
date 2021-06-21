@@ -669,7 +669,7 @@ namespace EventHistory
         //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
         {
             static ali::string_literal const smartUri;
-            static ali::string_literal const rewrittenTransportUri;
+            static ali::string_literal const dialActionRewrittenTransportUri;
         };
 
     private:

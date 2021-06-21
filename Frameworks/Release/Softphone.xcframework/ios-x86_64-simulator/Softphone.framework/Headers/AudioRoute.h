@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "MicrophoneType.h"
 #include "ali/ali_array_utils.h"
 #include "ali/ali_string.h"
 
@@ -34,21 +35,4 @@ namespace Softphone
         static AudioRoute::Type fromString(ali::string_const_ref route);
     };
 
-
-
-    // ******************************************************************
-    struct Microphone
-    // ******************************************************************
-    {
-        // ******************************************************************
-        enum Type
-        // ******************************************************************
-        {
-            Unknown     = 0,
-            Physical    = 1 << 1,
-            Simulated   = 1 << 2        // values should be 2^n
-        };
-
-        static ali::c_string_const_ref toString( Type );
-    };
 }

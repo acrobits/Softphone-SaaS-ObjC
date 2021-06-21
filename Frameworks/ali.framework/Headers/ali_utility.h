@@ -199,7 +199,7 @@ inline FI2 swap_ranges( FI1 it, FI1 end, FI2 x )
 
 // ******************************************************************
 template <typename T>
-inline T const& mini( T const& x, T const& y ) noexcept (
+inline constexpr T const& mini( T const& x, T const& y ) noexcept (
     noexcept(y < x))
 // ******************************************************************
 {
@@ -208,7 +208,7 @@ inline T const& mini( T const& x, T const& y ) noexcept (
 
 // ******************************************************************
 template <typename T>
-inline T const& maxi( T const& x, T const& y ) noexcept (
+inline constexpr T const& maxi( T const& x, T const& y ) noexcept (
     noexcept(y > x))
 // ******************************************************************
 {
@@ -224,11 +224,11 @@ inline T const& maxi( T const& x, T const& y ) noexcept (
 //
 //  a < b ? -1 : b < a ? 1 : 0 == (a > b) - (a < b)
 //
-#define ALI_DEFINE_COMPARE_FOR(Type)                \
-    inline int compare( Type a, Type b ) noexcept ( \
-        noexcept((a > b) - (a < b)))                \
-    {                                               \
-        return (a > b) - (a < b);                   \
+#define ALI_DEFINE_COMPARE_FOR(Type)                            \
+    inline constexpr int compare( Type a, Type b ) noexcept (   \
+        noexcept((a > b) - (a < b)))                            \
+    {                                                           \
+        return (a > b) - (a < b);                               \
     }
 
 ALI_DEFINE_COMPARE_FOR(char)
@@ -266,7 +266,7 @@ using ali::compare;
 
 // ******************************************************************
 template <typename T, typename U>
-inline int adl_compare( T const& a, U const& b ) noexcept(
+inline constexpr int adl_compare( T const& a, U const& b ) noexcept(
     noexcept(compare(a, b)))
 // ******************************************************************
 {
@@ -279,7 +279,7 @@ inline int adl_compare( T const& a, U const& b ) noexcept(
 
 // ******************************************************************
 template <typename T, typename U>
-inline int adl_compare( T const& a, U const& b ) noexcept(
+inline constexpr int adl_compare( T const& a, U const& b ) noexcept(
     noexcept(hidden::adl_comparator::adl_compare(a, b)))
 // ******************************************************************
 {
@@ -294,25 +294,25 @@ struct default_comparator
 // ******************************************************************
 {
     template <typename T, typename U>
-    int operator()( T const& a, U const& b ) const noexcept(
+    constexpr int operator()( T const& a, U const& b ) const noexcept(
         noexcept(ali::adl_compare(a, b)))
     {
         return ali::adl_compare(a, b);
     }
 
-    bool operator==( default_comparator const& ) const noexcept
+    constexpr bool operator==( default_comparator const& ) const noexcept
     {
         return true;
     }
 
-    bool operator!=( default_comparator const& b ) const noexcept
+    constexpr bool operator!=( default_comparator const& b ) const noexcept
     {
         return !operator==(b);
     }
 
-    void swap( default_comparator& ) noexcept {}
+    constexpr void swap( default_comparator& ) noexcept {}
 
-    friend void swap(
+    friend constexpr void swap(
         default_comparator&,
         default_comparator& ) noexcept {}
 };

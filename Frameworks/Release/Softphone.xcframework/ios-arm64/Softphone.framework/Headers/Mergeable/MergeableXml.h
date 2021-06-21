@@ -179,6 +179,14 @@ namespace Softphone::Mergeable
 
         ali::string dump(bool pretty = true) const;
 
+        friend ali::string& format(
+            ali::string& str,
+            Xml const& value,
+            ali::string_const_ref formatString )
+        {
+            return ali::xml::format(str, value.mXml, formatString);
+        }
+
     protected:
         ali::xml::tree & getXml()
         {

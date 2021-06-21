@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = "Softphone-SaaS-ObjC"
-    s.version      = "1.0.153555"
+    s.version      = "1.0.160612"
     s.summary      = "Acrobits Softphone ObjC Framework"
     s.homepage     = "https://acrobits.net"
     s.author       = { "$(git config user.name)" => "$(git config user.email)" }

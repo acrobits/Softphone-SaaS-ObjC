@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ali/ali_string_forward.h"
+#include "ali/ali_tstring_forward.h"
 
 namespace ali
 {
@@ -110,6 +110,50 @@ struct demangle_result
 demangle_result demangle_typeid_name_in_place( ali::string& name );
 // ******************************************************************
 
+// ******************************************************************
+// ******************************************************************
+#if 0
+// ******************************************************************
+class core_dump_file_owner
+// ******************************************************************
+//  The destructor of the last object referencing a given
+//  core file deletes the file, unless told not to.
+// ******************************************************************
+{
+public:
+    core_dump_file_owner( void );
+    explicit core_dump_file_owner( ali::tchar const* path );
+    core_dump_file_owner( core_dump_file_owner const& b );
+    core_dump_file_owner( core_dump_file_owner&& b );
+
+    ~core_dump_file_owner( void );
+
+    core_dump_file_owner& operator=( core_dump_file_owner b );
+
+    bool is_null( void ) const
+    {
+        return _data == nullptr;
+    }
+
+    ali::tchar const* path( void ) const;
+
+    bool keep_file( void ) const;
+    
+    void set_keep_file( bool value = true );
+
+private:    //  Methods
+    static void try_delete_file( ali::tchar const* path );
+        //  To be implemented in ali_debug_platform.cpp.
+
+private:    //  Data members
+    struct data;
+    data*   _data{};
+};
+
+// ******************************************************************
+core_dump_file_owner generate_core_dump_file( void );
+// ******************************************************************
+#endif
 }   //  namespace debug
 
 }   //  namespace ali

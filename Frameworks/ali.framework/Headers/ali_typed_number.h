@@ -19,19 +19,19 @@ template <typename number_type, typename enum_type, enum_type type>
 struct typed_number
 // ******************************************************************
 {
-    typed_number( void ) {}
+    constexpr typed_number( void ) {}
     
-    explicit typed_number( number_type value )
+    constexpr explicit typed_number( number_type value )
     :   value{value}
     {}
 
-    void swap( typed_number& b )
+    constexpr void swap( typed_number& b )
     {
         using ali::swap;
         swap(value, b.value);
     }
 
-    friend void swap( typed_number& a, typed_number& b )
+    constexpr friend void swap( typed_number& a, typed_number& b )
     {
         a.swap(b);
     }
@@ -41,7 +41,7 @@ struct typed_number
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator++(
+constexpr inline typed_number<number_type, enum_type, type>& operator++(
     typed_number<number_type, enum_type, type>& a )
 // ******************************************************************
 {
@@ -51,7 +51,7 @@ inline typed_number<number_type, enum_type, type>& operator++(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator+=(
+constexpr inline typed_number<number_type, enum_type, type>& operator+=(
     typed_number<number_type, enum_type, type>& a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -62,7 +62,7 @@ inline typed_number<number_type, enum_type, type>& operator+=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator--(
+constexpr inline typed_number<number_type, enum_type, type>& operator--(
     typed_number<number_type, enum_type, type>& a )
 // ******************************************************************
 {
@@ -72,7 +72,7 @@ inline typed_number<number_type, enum_type, type>& operator--(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator-=(
+constexpr inline typed_number<number_type, enum_type, type>& operator-=(
     typed_number<number_type, enum_type, type>& a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -83,7 +83,7 @@ inline typed_number<number_type, enum_type, type>& operator-=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator*=(
+constexpr inline typed_number<number_type, enum_type, type>& operator*=(
     typed_number<number_type, enum_type, type>& a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -94,7 +94,7 @@ inline typed_number<number_type, enum_type, type>& operator*=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator/=(
+constexpr inline typed_number<number_type, enum_type, type>& operator/=(
     typed_number<number_type, enum_type, type>& a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -105,7 +105,7 @@ inline typed_number<number_type, enum_type, type>& operator/=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type>& operator%=(
+constexpr inline typed_number<number_type, enum_type, type>& operator%=(
     typed_number<number_type, enum_type, type>& a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -116,7 +116,7 @@ inline typed_number<number_type, enum_type, type>& operator%=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator+(
+constexpr inline typed_number<number_type, enum_type, type> operator+(
     typed_number<number_type, enum_type, type> a )
 // ******************************************************************
 {
@@ -125,7 +125,7 @@ inline typed_number<number_type, enum_type, type> operator+(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator+(
+constexpr inline typed_number<number_type, enum_type, type> operator+(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -135,7 +135,7 @@ inline typed_number<number_type, enum_type, type> operator+(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator-(
+constexpr inline typed_number<number_type, enum_type, type> operator-(
     typed_number<number_type, enum_type, type> a )
 // ******************************************************************
 {
@@ -146,7 +146,7 @@ inline typed_number<number_type, enum_type, type> operator-(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator-(
+constexpr inline typed_number<number_type, enum_type, type> operator-(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -156,7 +156,7 @@ inline typed_number<number_type, enum_type, type> operator-(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator*(
+constexpr inline typed_number<number_type, enum_type, type> operator*(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -166,7 +166,7 @@ inline typed_number<number_type, enum_type, type> operator*(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator/(
+constexpr inline typed_number<number_type, enum_type, type> operator/(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -176,7 +176,7 @@ inline typed_number<number_type, enum_type, type> operator/(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline typed_number<number_type, enum_type, type> operator%(
+constexpr inline typed_number<number_type, enum_type, type> operator%(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -186,7 +186,7 @@ inline typed_number<number_type, enum_type, type> operator%(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline int compare(
+constexpr inline int compare(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -197,7 +197,7 @@ inline int compare(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline bool operator==(
+constexpr inline bool operator==(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -207,7 +207,7 @@ inline bool operator==(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline bool operator!=(
+constexpr inline bool operator!=(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -217,7 +217,7 @@ inline bool operator!=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline bool operator<(
+constexpr inline bool operator<(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -227,7 +227,7 @@ inline bool operator<(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline bool operator>(
+constexpr inline bool operator>(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -237,7 +237,7 @@ inline bool operator>(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline bool operator<=(
+constexpr inline bool operator<=(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************
@@ -247,7 +247,7 @@ inline bool operator<=(
 
 // ******************************************************************
 template <typename number_type, typename enum_type, enum_type type>
-inline bool operator>=(
+constexpr inline bool operator>=(
     typed_number<number_type, enum_type, type> a,
     typed_number<number_type, enum_type, type> b )
 // ******************************************************************

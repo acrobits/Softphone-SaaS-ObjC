@@ -26,9 +26,8 @@ inline time::milliseconds64& convert(
     time::seconds b )
 // ******************************************************************
 {
-    a.value = b.value;
-    a.value *= 1000;
-    return a;
+    return a = time::milliseconds64{
+        1000 * static_cast<ali::int64>(b.value)};
 }
 
 // ******************************************************************
@@ -50,7 +49,7 @@ inline time::seconds64& operator+=(
         time::minutes b )
 // ******************************************************************
 {
-    a.value += 60 * b.value;
+    a.value += 60 * static_cast<ali::int64>(b.value);
     return a;
 }
 
@@ -60,7 +59,7 @@ inline time::float_seconds& operator+=(
         time::minutes b )
 // ******************************************************************
 {
-    a.value += 60 * b.value;
+    a.value += 60.0 * static_cast<double>(b.value);
     return a;
 }
 
@@ -80,7 +79,7 @@ inline time::seconds64& operator-=(
         time::minutes b )
 // ******************************************************************
 {
-    a.value -= 60 * b.value;
+    a.value -= 60 * static_cast<ali::int64>(b.value);
     return a;
 }
 
@@ -90,7 +89,7 @@ inline time::float_seconds& operator-=(
         time::minutes b )
 // ******************************************************************
 {
-    a.value -= 60 * b.value;
+    a.value -= 60.0 * static_cast<double>(b.value);
     return a;
 }
 
@@ -110,7 +109,7 @@ inline time::seconds64& operator+=(
         time::hours b )
 // ******************************************************************
 {
-    a.value += 60 * 60 * b.value;
+    a.value += 60 * 60 * static_cast<ali::int64>(b.value);
     return a;
 }
 
@@ -120,7 +119,7 @@ inline time::float_seconds& operator+=(
         time::hours b )
 // ******************************************************************
 {
-    a.value += 60 * 60 * b.value;
+    a.value += 60.0 * 60.0 * static_cast<double>(b.value);
     return a;
 }
 
@@ -140,7 +139,7 @@ inline time::seconds64& operator-=(
         time::hours b )
 // ******************************************************************
 {
-    a.value -= 60 * 60 * b.value;
+    a.value -= 60 * 60 * static_cast<ali::int64>(b.value);
     return a;
 }
 
@@ -150,7 +149,7 @@ inline time::float_seconds& operator-=(
         time::hours b )
 // ******************************************************************
 {
-    a.value -= 60 * 60 * b.value;
+    a.value -= 60.0 * 60.0 * static_cast<double>(b.value);
     return a;
 }
 
@@ -268,14 +267,14 @@ inline time::minutes operator-(
 inline time::hours whole_hours( time::minutes m )
 // ******************************************************************
 {
-    return time::hours(m.value / 60);
+    return time::hours{m.value / 60};
 }
 
 // ******************************************************************
 inline time::minutes strip_hours( time::minutes m )
 // ******************************************************************
 {
-    m.value %= 60; return m;
+    return time::minutes{m.value % 60};
 }
 
 // ******************************************************************
@@ -289,7 +288,7 @@ struct unix_timestamp
     {}
     
     explicit unix_timestamp( time::seconds value )
-    :   value(value)
+    :   value{value}
     {}
 
     unix_timestamp& operator+=( time::seconds delta )
@@ -442,7 +441,7 @@ struct unix_timestamp64
     {}
     
     explicit unix_timestamp64( time::seconds64 value )
-    :   value(value)
+    :   value{value}
     {}
 
     unix_timestamp64& operator+=( time::seconds64 delta )
@@ -582,25 +581,25 @@ struct unix_micro_timestamp
     {}
     
     explicit unix_micro_timestamp( time::seconds value )
-    :   value(value.value * 1000000)
+    :   value{static_cast<ali::int64>(value.value) * 1000000}
     {}
 
     explicit unix_micro_timestamp( time::float_seconds value )
-    :   value(static_cast<ali::int64>(value.value * 1000000.0))
+    :   value{static_cast<ali::int64>(value.value * 1000000.0)}
     {}
 
     explicit unix_micro_timestamp( time::microseconds64 value )
-    :   value(value)
+    :   value{value}
     {}
 
     unix_micro_timestamp& operator+=( time::seconds delta )
     {
-        return operator+=(unix_micro_timestamp(delta).value);
+        return operator+=(unix_micro_timestamp{delta}.value);
     }
 
     unix_micro_timestamp& operator+=( time::float_seconds delta )
     {
-        return operator+=(unix_micro_timestamp(delta).value);
+        return operator+=(unix_micro_timestamp{delta}.value);
     }
 
     unix_micro_timestamp& operator+=( time::microseconds64 delta )
@@ -611,12 +610,12 @@ struct unix_micro_timestamp
     
     unix_micro_timestamp& operator-=( time::seconds delta )
     {
-        return operator-=(unix_micro_timestamp(delta).value);
+        return operator-=(unix_micro_timestamp{delta}.value);
     }
 
     unix_micro_timestamp& operator-=( time::float_seconds delta )
     {
-        return operator-=(unix_micro_timestamp(delta).value);
+        return operator-=(unix_micro_timestamp{delta}.value);
     }
 
     unix_micro_timestamp& operator-=( time::microseconds64 delta )
@@ -708,9 +707,7 @@ struct ntp_timestamp
 //  from 0h on Jan 1, 1900 with 32-bit fractional part.
 // ******************************************************************
 {
-    ntp_timestamp( void )
-    :   value(0)
-    {}
+    ntp_timestamp( void ) = default;
 
     ntp_timestamp& operator+=( time::seconds delta );
     
@@ -756,18 +753,17 @@ struct ntp_timestamp
         return compare(a.value, b.value);
     }
     
-    unsigned int seconds( void ) const
+    ali::uint32 seconds( void ) const
     {
-        ali::uint64 temp = value; temp >>= 32;
-        return static_cast<unsigned int>(temp) & 0xffffffffU;
+        return static_cast<ali::uint32>((value >> 32) & 0xffffffffU);
     }
     
-    unsigned int fraction( void ) const
+    ali::uint32 fraction( void ) const
     {
-        return static_cast<unsigned int>(value) & 0xffffffffU;
+        return static_cast<ali::uint32>(value & 0xffffffffU);
     }
     
-    ali::uint64 value;
+    ali::uint64 value{};
 };
 
 // ******************************************************************
@@ -810,7 +806,7 @@ struct julian_day
 // ******************************************************************
 {
     explicit julian_day( double value = 0.0 )
-    :   value(value)
+    :   value{value}
     {}
 
     void swap( julian_day& b )
@@ -887,7 +883,7 @@ struct julian_day
         return compare(a.value, b.value);
     }
     
-    double  value;
+    double  value{};
 };
 
 // ******************************************************************
@@ -897,12 +893,13 @@ struct julian_day
 struct mac_absolute_time : time::float_seconds
 // ******************************************************************
 {
-    mac_absolute_time( time::float_seconds value = time::float_seconds() )
-    :   time::float_seconds(value)
+    mac_absolute_time( time::float_seconds value = time::float_seconds{} )
+    :   float_seconds{value}
     {}
 
-    mac_absolute_time( double value )
-    :   time::float_seconds(value)
+    /* TODO: make this ctor explicit eventually.
+    explicit*/ mac_absolute_time( double value )
+    :   time::float_seconds{value}
     {}
 
     mac_absolute_time& operator+=( time::float_seconds delta )
@@ -919,13 +916,13 @@ struct mac_absolute_time : time::float_seconds
 
     mac_absolute_time& operator+=( time::milliseconds delta )
     {
-        value += static_cast<double>(delta.value) / 1000;
+        value += static_cast<double>(delta.value) / 1000.0;
         return *this;
     }
 
     mac_absolute_time& operator+=( time::microseconds64 delta )
     {
-        value += static_cast<double>(delta.value) / 1000000;
+        value += static_cast<double>(delta.value) / 1000000.0;
         return *this;
     }
 
@@ -943,17 +940,15 @@ struct mac_absolute_time : time::float_seconds
 
     mac_absolute_time& operator-=( time::milliseconds delta )
     {
-        value -= static_cast<double>(delta.value) / 1000;
+        value -= static_cast<double>(delta.value) / 1000.0;
         return *this;
     }
 
     mac_absolute_time& operator-=( time::microseconds64 delta )
     {
-        value -= static_cast<double>(delta.value) / 1000000;
+        value -= static_cast<double>(delta.value) / 1000000.0;
         return *this;
     }
-
-
 };
 
 // ******************************************************************
@@ -1730,6 +1725,47 @@ bool parse_date_and_or_time( time::parts& parts, string_const_ref str );
 
 // ******************************************************************
 namespace vcard = rfc6350;
+// ******************************************************************
+
+// ******************************************************************
+// ******************************************************************
+
+// ******************************************************************
+ali::string& format(
+    ali::string& str,
+    time::parts const& value,
+    string_const_ref format_string );
+// ******************************************************************
+
+// ******************************************************************
+ali::string& format(
+    ali::string& str,
+    time::unix_timestamp value,
+    string_const_ref format_string );
+// ******************************************************************
+
+// ******************************************************************
+ali::string& format(
+    ali::string& str,
+    time::unix_timestamp64 value,
+    string_const_ref format_string );
+// ******************************************************************
+
+// ******************************************************************
+ali::string& format(
+    ali::string& str,
+    time::unix_micro_timestamp value,
+    string_const_ref format_string );
+// ******************************************************************
+
+// ******************************************************************
+ali::string& format(
+    ali::string& str,
+    time::mac_absolute_time value,
+    string_const_ref format_string );
+// ******************************************************************
+
+// ******************************************************************
 // ******************************************************************
 
 // ******************************************************************

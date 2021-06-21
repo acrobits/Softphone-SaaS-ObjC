@@ -86,6 +86,11 @@ public:
         return mKey;
     }
 
+    virtual bool isValidStringValue(ali::string_const_ref val) const
+    {
+        return true;
+    }
+
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     ali::string_const_ref getDefaultStringValue() const
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -366,6 +371,12 @@ public:
     virtual ~Key() override
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     {}
+
+    virtual bool isValidStringValue(ali::string_const_ref val) const override
+    {
+        return  mValidator.is_null()
+            ||  (*mValidator)(val);
+    }
 
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     virtual void setStringValue(ali::string_const_ref val) override

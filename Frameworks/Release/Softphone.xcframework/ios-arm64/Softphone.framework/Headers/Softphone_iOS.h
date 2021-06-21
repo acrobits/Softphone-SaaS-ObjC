@@ -63,16 +63,26 @@
  */
 -(BOOL) isCallKitAvailable;
 
-
 /** @brief allows you to asynchronously update the callkit calls
  * @param call The call event to which the CXCallUpdate relates
  * @param update the new set of properties
  */
-
 -(void) reportCall: (Softphone::EventHistory::CallEvent::Pointer) call updated: (CXCallUpdate*) update;
 
-/** @brief the delagate allows receiving iOS specific callbacks. E.g. adjusting the CxCallUpdate object before it's passed to the callkit */
+/** @brief informas the SDK that it should configure the audio session. Typically called right after initiating the call, or in performAnswerCallAction
+ */
+-(void) callKitConfigureAudioSession;
 
+/** @brief informas the SDK that callkit activated the audio session. Typically called from didActivateAudioSession
+ */
+-(void) callKitAudioSessionDidActivate;
+
+/** @brief informas the SDK that callkit deactivated the audio session. Typically called from didDeactivateAudioSession
+ */
+-(void) callKitAudioSessionDidDeactivate;
+
+/** @brief the delagate allows receiving iOS specific callbacks. E.g. adjusting the CxCallUpdate object before it's passed to the callkit
+ */
 @property(nonatomic, weak) id<Softphone_iOS_Delegate> delegate;
 
 @end

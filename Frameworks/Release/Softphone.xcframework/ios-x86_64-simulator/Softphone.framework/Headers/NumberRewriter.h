@@ -13,7 +13,7 @@
 #include "ali/ali_array_utils.h"
 #include "ali/ali_xml_tree2_forward.h"
 #include "ali/ali_json.h"
-#include "DialAction/DialActionType.h"
+#include "Softphone/DialAction/DialActionType.h"
 
 namespace NumberRewriting
 {

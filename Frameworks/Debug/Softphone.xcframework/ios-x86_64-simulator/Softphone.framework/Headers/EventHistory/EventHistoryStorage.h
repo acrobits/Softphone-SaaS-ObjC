@@ -100,7 +100,7 @@ namespace EventHistory
     //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
     {
         ChangedStreams() : many(false) {};
-        void clear() {many = false; streamKeys.erase();};
+        void clear() {many = false; streamKeys.erase();streamKeyChanges.erase();};
 
         bool                        many;
         ali::array_set<ali::string> streamKeys;

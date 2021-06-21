@@ -2622,7 +2622,7 @@ protected:  //  Methods
     }
 
         void reallocating_move_back_n(
-            array_ref<T> b,
+            array_ref<T> /*b*/,
             fixed_capacity_version )
         {
             this->raise_requested_capacity_too_large(ALI_HERE);
@@ -3733,7 +3733,7 @@ public:
     }
 
     // pre: byte_count in set {1, 2, 3, 4, 5, 6, 7, 8}
-    array& insert_long_le_at( int pos1, ali::uint64 value, int byte_count )
+    array& insert_long_le( int pos1, ali::uint64 value, int byte_count )
     {
         return this->insert(pos1, ali::uint8{}, byte_count)
             .set_long_le_at(pos1, value, byte_count);

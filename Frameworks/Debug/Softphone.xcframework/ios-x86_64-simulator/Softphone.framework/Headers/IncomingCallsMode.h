@@ -10,6 +10,7 @@
 #pragma once
 
 #include "ali/ali_string.h"
+#include "Softphone/PreferenceKeys/KeyValueConvertor.h"
 
 namespace Softphone
 {
@@ -63,4 +64,31 @@ namespace Softphone
         Type value { Off };
     };
 }
+
+namespace PreferenceKeys
+{
+    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    template<>
+    class KeyValueConvertor<Softphone::IncomingCallsMode>
+    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    {
+    public:
+        static ali::string_literal const typeName;
+
+        //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+        static ali::string toString(Softphone::IncomingCallsMode const& v)
+        //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+        {
+            return Softphone::IncomingCallsMode::toString(v);
+        }
+
+        //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+        static Softphone::IncomingCallsMode fromString(ali::string_const_ref str)
+        //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+        {
+            return Softphone::IncomingCallsMode::fromString(str);
+        }
+    };
+}
+
 

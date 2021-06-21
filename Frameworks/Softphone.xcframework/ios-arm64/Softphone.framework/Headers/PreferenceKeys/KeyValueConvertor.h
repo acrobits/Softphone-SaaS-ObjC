@@ -7,7 +7,6 @@
 #include "ali/ali_uuid.h"
 #include "ali/ali_xml_parser2_interface.h"
 #include "ali/ali_xml_tree2.h"
-#include "Softphone/IncomingCallsMode.h"
 #include "Softphone/BoolValueOverride.h"
 
 // Forward declarations
@@ -317,29 +316,6 @@ public:
 
     static ali::string toString(ali::small_string_map<> const& v);
     static ali::small_string_map<> fromString(ali::string_const_ref str);
-};
-
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-template<>
-class KeyValueConvertor<Softphone::IncomingCallsMode>
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-{
-public:
-    static ali::string_literal const typeName;
-
-    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    static ali::string toString(Softphone::IncomingCallsMode v)
-    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    {
-        return Softphone::IncomingCallsMode::toString(v);
-    }
-
-    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    static Softphone::IncomingCallsMode fromString(ali::string_const_ref str)
-    //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-    {
-        return Softphone::IncomingCallsMode::fromString(str);
-    }
 };
 
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

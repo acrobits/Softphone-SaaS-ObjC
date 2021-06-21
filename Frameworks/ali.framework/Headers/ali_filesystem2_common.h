@@ -614,7 +614,39 @@ namespace file
 {
 
 // ******************************************************************
-namespace overwrite { enum type {no, yes}; }
+struct overwrite
+// ******************************************************************
+{
+    enum type {no, yes};
+
+    overwrite( type value )
+    :   value{value}
+    {}
+
+    friend bool operator==( overwrite a, overwrite b )
+    {
+        return a.value == b.value;
+    }
+
+    friend bool operator!=( overwrite a, overwrite b )
+    {
+        return !(a == b);
+    }
+
+    bool is_no( void ) const
+    {
+        return value == no;
+    }
+
+    bool is_yes( void ) const
+    {
+        return value == yes;
+    }
+
+    type value;
+};
+
+// ******************************************************************
 // ******************************************************************
 
 // ******************************************************************
@@ -678,6 +710,14 @@ typedef hidden::constructor<hidden::flag::create_new>       create_new;
 typedef hidden::constructor<hidden::flag::create_always>    create_always;
 typedef hidden::constructor<hidden::flag::open_existing>    open_existing;
 typedef hidden::constructor<hidden::flag::open_always>      open_always;
+// ******************************************************************
+//                        |            When the file...
+//  This argument:        |          Exists      Does not exist
+//  ----------------------+------------------------------------
+//  CREATE_ALWAYS         |         Truncates       Creates
+//  CREATE_NEW      +-----------+     Fails         Creates
+//  OPEN_ALWAYS   ==| does this |==>  Opens         Creates
+//  OPEN_EXISTING   +-----------+     Opens          Fails
 // ******************************************************************
 
 }   //  namespace open_mode
